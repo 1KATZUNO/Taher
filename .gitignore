@@ -1,0 +1,30 @@
+# Dependencias
+node_modules/
+
+# Variables de entorno (¡nunca subir credenciales!)
+.env
+*.env
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# Expo / React Native
+app/.expo/
+app/dist/
+app/web-build/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# Builds nativos
+app/android/
+app/ios/
+
+# Sistema
+.DS_Store
+Thumbs.db
