@@ -8,6 +8,7 @@ import morgan from "morgan";
 import authRoutes from "./routes/auth.js";
 import jovenesRoutes from "./routes/jovenes.js";
 import statsRoutes from "./routes/stats.js";
+import { obtenerConfig } from "./models/Config.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -47,6 +48,11 @@ async function start() {
     }
     await mongoose.connect(process.env.MONGO_URI);
     console.log("✅ Conectado a MongoDB Atlas");
+
+    // Asegura que el PIN universal exista en la BD (colección 'config')
+    const config = await obtenerConfig();
+    console.log(`🔑 PIN universal activo: ${config.pin}`);
+
     app.listen(PORT, () => {
       console.log(`🚀 API Taher escuchando en http://localhost:${PORT}`);
     });

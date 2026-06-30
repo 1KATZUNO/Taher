@@ -72,9 +72,10 @@ Luego escanea el QR con la app **Expo Go** (Android/iOS) o pulsa `a` para abrir 
   EXPO_PUBLIC_API_URL=http://192.168.x.x:4000
   ```
 
-### PIN de acceso (demo)
+### PIN de acceso
 
-`1234` (configurable en `backend/.env` → `APP_PIN`).
+PIN universal **`2207`** (igual para todos). Se guarda en la BD (colección `config`)
+y la API lo valida desde ahí. El valor inicial se siembra desde `backend/.env` → `APP_PIN`.
 
 ---
 

@@ -1,25 +1,31 @@
 import { Router } from "express";
+import { obtenerConfig } from "../models/Config.js";
 
 const router = Router();
 
 /**
  * POST /api/auth/pin
- * Body: { pin: "1234" }
- * Valida el PIN de acceso a la app contra la variable de entorno APP_PIN.
+ * Body: { pin: "2207" }
+ * Valida el PIN universal de acceso contra el valor guardado en la BD (colección 'config').
  */
-router.post("/pin", (req, res) => {
-  const { pin } = req.body;
-  const expected = process.env.APP_PIN || "1234";
+router.post("/pin", async (req, res, next) => {
+  try {
+    const { pin } = req.body;
 
-  if (typeof pin !== "string" && typeof pin !== "number") {
-    return res.status(400).json({ ok: false, message: "PIN requerido" });
+    if (typeof pin !== "string" && typeof pin !== "number") {
+      return res.status(400).json({ ok: false, message: "PIN requerido" });
+    }
+
+    const config = await obtenerConfig();
+
+    if (String(pin) === String(config.pin)) {
+      return res.json({ ok: true, message: "Acceso concedido" });
+    }
+
+    return res.status(401).json({ ok: false, message: "PIN incorrecto" });
+  } catch (err) {
+    next(err);
   }
-
-  if (String(pin) === String(expected)) {
-    return res.json({ ok: true, message: "Acceso concedido" });
-  }
-
-  return res.status(401).json({ ok: false, message: "PIN incorrecto" });
 });
 
 export default router;

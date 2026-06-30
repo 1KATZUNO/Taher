@@ -1,6 +1,7 @@
 import "dotenv/config";
 import mongoose from "mongoose";
 import Joven from "./models/Joven.js";
+import Config, { obtenerConfig } from "./models/Config.js";
 
 const datos = [
   { nombreCompleto: "Mateo Rodríguez", edad: 19, ciudad: "Medellín", direccion: "Cra 45 #12-30", telefono: "55 1111 0001", genero: "masculino", whatsappConsent: true },
@@ -21,6 +22,16 @@ async function seed() {
     console.log("🧹 Colección 'jovenes' limpiada");
     const creados = await Joven.insertMany(datos);
     console.log(`🌱 ${creados.length} jóvenes insertados`);
+
+    // Siembra el PIN universal en la colección 'config'
+    const pin = process.env.APP_PIN || "2207";
+    await Config.updateOne(
+      { clave: "global" },
+      { $set: { pin } },
+      { upsert: true }
+    );
+    const config = await obtenerConfig();
+    console.log(`🔑 PIN universal sembrado en la BD: ${config.pin}`);
   } catch (err) {
     console.error("❌ Error al sembrar datos:", err.message);
   } finally {
