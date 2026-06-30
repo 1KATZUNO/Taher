@@ -62,15 +62,16 @@ npm start        # abre Expo Dev Tools
 
 Luego escanea el QR con la app **Expo Go** (Android/iOS) o pulsa `a` para abrir un emulador Android.
 
-### Importante para que la app vea la API
+### A qué API se conecta la app
 
-- El teléfono y la PC deben estar en la **misma red WiFi**.
-- La app detecta automáticamente la IP de tu PC (la misma de Metro) y usa el puerto `4000`.
-- En **Windows**, permite el puerto 4000 en el Firewall la primera vez (o crea una regla de entrada para Node.js).
-- Si necesitas forzar la URL, crea `app/.env` con:
-  ```env
-  EXPO_PUBLIC_API_URL=http://192.168.x.x:4000
-  ```
+- **APK instalado / producción:** usa la API desplegada en Render (HTTPS), fijada en
+  `app/.env` → `EXPO_PUBLIC_API_URL=https://taher-82uh.onrender.com`. Así la app
+  funciona sola en cualquier teléfono, contra la base en la nube. No necesita tu PC.
+- **Desarrollo con Expo Go (sin `.env`):** si borras `EXPO_PUBLIC_API_URL`, la app
+  detecta la IP de tu PC (la de Metro) y usa el puerto `4000` contra el backend local
+  (teléfono y PC en la misma WiFi; permite el puerto 4000 en el Firewall de Windows).
+- El plan Free de Render "duerme" el servicio tras ~15 min de inactividad: el primer
+  acceso puede tardar ~30-50s en responder, luego va normal.
 
 ### PIN de acceso
 
