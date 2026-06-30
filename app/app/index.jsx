@@ -125,7 +125,6 @@ export default function PinScreen() {
               ¿Olvidaste tu PIN?
             </Text>
           )}
-          <Text className="text-outline text-xs mt-4">PIN universal: 2207</Text>
         </View>
       </View>
     </SafeAreaView>
