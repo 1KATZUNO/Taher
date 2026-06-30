@@ -14,7 +14,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { api } from "../lib/api";
 
-const EDADES = Array.from({ length: 19 }, (_, i) => i + 12); // 12..30
+const EDADES = Array.from({ length: 30 }, (_, i) => i + 1); // 1..30
 
 export default function RegistroScreen() {
   const router = useRouter();
