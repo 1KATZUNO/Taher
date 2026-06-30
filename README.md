@@ -81,17 +81,42 @@ y la API lo valida desde ahí. El valor inicial se siembra desde `backend/.env` 
 
 ## 3. Generar el APK instalable (con logo)
 
-El icono de instalación se configura en `app/app.json` (`icon`, `android.adaptiveIcon`).
-Reemplaza `app/assets/icon.png` por el logo de Taher (PNG cuadrado 1024×1024).
-
-Build en la nube con EAS:
+El icono se genera desde un PNG con el logo de Taher:
 
 ```bash
 cd app
-npm install -g eas-cli
-eas login
-eas build -p android --profile preview   # genera un APK descargable
+node scripts/gen-icons.mjs C:/ruta/al/logo.png   # crea todos los assets en ./assets
 ```
+
+### Opción A — Build local (sin cuenta Expo)
+
+Requiere Android SDK + JDK 17/21. Genera un APK firmado con el keystore debug (instalable).
+
+```bash
+cd app
+npx expo prebuild --platform android --no-install
+# IMPORTANTE: el wrapper se genera con Gradle 9.3.1, que es incompatible con la
+# cadena de plugins de RN 0.85 (falta JvmVendorSpec.IBM_SEMERU). Baja a 8.13:
+#   android/gradle/wrapper/gradle-wrapper.properties
+#   distributionUrl=...gradle-8.13-bin.zip
+# y crea android/local.properties con: sdk.dir=C:/Users/<tu>/AppData/Local/Android/Sdk
+cd android && ./gradlew assembleRelease
+# APK resultante: android/app/build/outputs/apk/release/app-release.apk
+```
+
+### Opción B — Build en la nube con EAS
+
+```bash
+cd app
+npx eas-cli login
+npx eas-cli build -p android --profile preview   # devuelve un APK descargable
+```
+
+### Instalar en el celular
+
+Pasa el `.apk` al teléfono (cable, WhatsApp, Drive…), ábrelo y permite
+"instalar apps de orígenes desconocidos". La app busca la API en tu PC (`:4000`),
+así que el backend debe estar corriendo y el teléfono en la misma WiFi.
 
 ---
 

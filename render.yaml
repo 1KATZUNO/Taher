@@ -1,0 +1,18 @@
+# Blueprint de despliegue para Render (https://render.com)
+# Crea un Web Service gratis con la API de Taher.
+# Pasos: render.com -> New -> Blueprint -> conecta el repo Taher -> Apply.
+# Luego define la variable MONGO_URI (secreta) en el dashboard.
+services:
+  - type: web
+    name: taher-api
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: MONGO_URI
+        sync: false # se define manualmente en el dashboard (secreto)
+      - key: APP_PIN
+        value: "2207"
