@@ -31,10 +31,10 @@ router.get("/", async (req, res, next) => {
 
     // Distribución por edad (rangos)
     const rangos = [
-      { etiqueta: "14-17", min: 14, max: 17 },
-      { etiqueta: "18-21", min: 18, max: 21 },
-      { etiqueta: "22-25", min: 22, max: 25 },
-      { etiqueta: "26-30", min: 26, max: 30 },
+      { etiqueta: "5-7", min: 5, max: 7 },
+      { etiqueta: "8-10", min: 8, max: 10 },
+      { etiqueta: "11-15", min: 11, max: 15 },
+      { etiqueta: "16-25", min: 16, max: 25 },
     ];
     const distribucionEdad = await Promise.all(
       rangos.map(async (r) => ({
