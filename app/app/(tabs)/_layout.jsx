@@ -1,7 +1,11 @@
 import { Tabs } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TabsLayout() {
+  // Respeta la barra de navegación del sistema (botones/gestos) en Android
+  const insets = useSafeAreaInsets();
+
   return (
     <Tabs
       screenOptions={{
@@ -9,8 +13,8 @@ export default function TabsLayout() {
         tabBarActiveTintColor: "#0058be",
         tabBarInactiveTintColor: "#727785",
         tabBarStyle: {
-          height: 64,
-          paddingBottom: 8,
+          height: 64 + insets.bottom,
+          paddingBottom: 8 + insets.bottom,
           paddingTop: 8,
           backgroundColor: "#e5eeff",
           borderTopWidth: 0,

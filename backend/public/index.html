@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taher — Registro Juvenil</title>
+  <meta name="description" content="Taher: registra y gestiona jóvenes de forma rápida, segura y desde cualquier dispositivo." />
+  <link rel="icon" href="/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #0058be;
+      --primary-container: #2170e4;
+      --secondary: #006c49;
+      --secondary-container: #6cf8bb;
+      --background: #f8f9ff;
+      --surface-container: #e5eeff;
+      --on-background: #0b1c30;
+      --on-surface-variant: #424754;
+      --outline: #727785;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Inter", system-ui, sans-serif;
+      background: var(--background);
+      color: var(--on-background);
+      -webkit-font-smoothing: antialiased;
+    }
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+    /* Header */
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(248, 249, 255, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(194, 198, 214, 0.3);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; color: var(--primary); }
+    .brand img { width: 36px; height: 36px; border-radius: 10px; }
+    .nav a.cta {
+      background: var(--primary); color: #fff; text-decoration: none;
+      padding: 10px 18px; border-radius: 12px; font-weight: 600; font-size: 14px;
+      transition: transform .15s ease, background .15s ease;
+    }
+    .nav a.cta:hover { background: var(--primary-container); transform: translateY(-1px); }
+
+    /* Hero */
+    .hero { padding: 72px 0 56px; text-align: center; position: relative; overflow: hidden; }
+    .hero::before {
+      content: ""; position: absolute; top: -40%; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 800px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(33,112,228,0.10) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero img.logo { width: 108px; height: 108px; border-radius: 28px; box-shadow: 0 12px 32px rgba(0,88,190,.18); margin-bottom: 24px; }
+    .hero h1 { font-size: clamp(32px, 6vw, 52px); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+    .hero h1 span { color: var(--primary); }
+    .hero p.sub {
+      margin: 18px auto 0; max-width: 560px; font-size: 18px; line-height: 1.6; color: var(--on-surface-variant);
+    }
+    .buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 36px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 16px 28px; border-radius: 14px; font-weight: 700; font-size: 16px;
+      text-decoration: none; transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn.android {
+      background: var(--primary); color: #fff;
+      box-shadow: 0 8px 24px rgba(0, 88, 190, 0.30);
+    }
+    .btn.web {
+      background: #fff; color: var(--primary); border: 2px solid var(--primary);
+    }
+    .btn svg { width: 22px; height: 22px; flex-shrink: 0; }
+    .hint { margin-top: 14px; font-size: 13px; color: var(--outline); }
+
+    /* Features */
+    .features { padding: 48px 0 72px; }
+    .features h2 { text-align: center; font-size: 28px; font-weight: 800; margin-bottom: 36px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; }
+    .card {
+      background: #fff; border: 1px solid rgba(194, 198, 214, 0.4);
+      border-radius: 18px; padding: 26px 22px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .card .icon {
+      width: 46px; height: 46px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 14px; background: var(--surface-container);
+    }
+    .card h3 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+    .card p { font-size: 14px; line-height: 1.55; color: var(--on-surface-variant); }
+
+    /* Steps */
+    .steps { background: #fff; border-top: 1px solid rgba(194,198,214,.3); border-bottom: 1px solid rgba(194,198,214,.3); padding: 56px 0; }
+    .steps h2 { text-align: center; font-size: 28px; font-weight: 800; margin-bottom: 36px; }
+    .steps ol { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; counter-reset: paso; }
+    .steps li { counter-increment: paso; background: var(--background); border-radius: 16px; padding: 22px; }
+    .steps li::before {
+      content: counter(paso);
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--primary); color: #fff; font-weight: 800; margin-bottom: 12px;
+    }
+    .steps li strong { display: block; margin-bottom: 4px; }
+    .steps li span { font-size: 14px; color: var(--on-surface-variant); line-height: 1.5; }
+
+    footer { padding: 36px 0; text-align: center; color: var(--outline); font-size: 13px; }
+    footer a { color: var(--primary); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand"><img src="/logo.png" alt="Logo Taher" /> Taher</div>
+      <a class="cta" href="/app">Abrir la app</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <img class="logo" src="/logo.png" alt="Logo Taher" />
+      <h1>Registro Juvenil,<br /><span>rápido y seguro</span></h1>
+      <p class="sub">
+        Taher te permite registrar y gestionar jóvenes en menos de 2 minutos:
+        búsqueda instantánea, estadísticas en vivo y contacto directo por WhatsApp.
+      </p>
+      <div class="buttons">
+        <a class="btn android" href="/downloads/Taher.apk" download>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.6 9.48l1.84-3.18c.16-.31.04-.7-.26-.85-.29-.15-.65-.06-.83.22l-1.88 3.24a11.46 11.46 0 00-8.94 0L5.65 5.67c-.19-.28-.54-.37-.83-.22-.3.15-.42.54-.26.85L6.4 9.48A10.81 10.81 0 001 18h22a10.81 10.81 0 00-5.4-8.52zM7 15.25a1.25 1.25 0 110-2.5 1.25 1.25 0 010 2.5zm10 0a1.25 1.25 0 110-2.5 1.25 1.25 0 010 2.5z"/></svg>
+          Descargar para Android
+        </a>
+        <a class="btn web" href="/app">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          Usar en el navegador
+        </a>
+      </div>
+      <p class="hint">Android: archivo .apk (~97 MB) · iPhone y PC: usa la versión web, funciona igual.</p>
+    </div>
+  </section>
+
+  <section class="features">
+    <div class="container">
+      <h2>Todo lo que necesitas</h2>
+      <div class="grid">
+        <div class="card">
+          <div class="icon">🔐</div>
+          <h3>Acceso con PIN</h3>
+          <p>Entrada protegida con un PIN universal para el equipo. Simple para todos, segura para los datos.</p>
+        </div>
+        <div class="card">
+          <div class="icon">📝</div>
+          <h3>Registro en 2 minutos</h3>
+          <p>Formulario ágil con selector de edad deslizable, género y consentimiento de WhatsApp.</p>
+        </div>
+        <div class="card">
+          <div class="icon">📊</div>
+          <h3>Estadísticas en vivo</h3>
+          <p>Totales, distribución por edad y género, y disponibilidad de WhatsApp, siempre actualizados.</p>
+        </div>
+        <div class="card">
+          <div class="icon">💬</div>
+          <h3>Contacto directo</h3>
+          <p>Escribe por WhatsApp a los jóvenes que aceptaron contacto, con un solo toque desde la lista.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="steps">
+    <div class="container">
+      <h2>Cómo empezar</h2>
+      <ol>
+        <li><strong>Descarga o abre</strong><span>Instala el APK en Android o abre la versión web en cualquier dispositivo (incluido iPhone).</span></li>
+        <li><strong>Ingresa el PIN</strong><span>Usa el PIN universal que te compartió tu coordinador para entrar.</span></li>
+        <li><strong>Registra y gestiona</strong><span>Agrega jóvenes, búscalos al instante y consulta las estadísticas del grupo.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      Taher · Registro Juvenil — <a href="/app">Abrir la app web</a>
+    </div>
+  </footer>
+</body>
+</html>

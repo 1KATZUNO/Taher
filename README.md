@@ -1,9 +1,12 @@
 # Taher — App de Registro Juvenil
 
-App móvil para registrar y gestionar jóvenes, con una base de datos **MongoDB Atlas**.
+App móvil y web para registrar y gestionar jóvenes, con una base de datos **MongoDB Atlas**.
 
-- **`backend/`** — API REST en Node + Express + Mongoose (habla con MongoDB).
-- **`app/`** — App móvil en React Native (Expo) + NativeWind (Tailwind).
+- **`backend/`** — API REST en Node + Express + Mongoose (habla con MongoDB). También sirve:
+  - `/` — landing page (info, botón de descarga del APK y enlace a la app web)
+  - `/app` — la app compilada para web (para iPhone/PC)
+  - `/downloads/Taher.apk` — el APK de Android
+- **`app/`** — App en React Native (Expo) + NativeWind. Compila a Android (APK) **y a web**.
 
 La app **no** se conecta directo a MongoDB: consume la API del backend. Así las credenciales de la base nunca viajan dentro de la app.
 
@@ -115,9 +118,24 @@ npx eas-cli build -p android --profile preview   # devuelve un APK descargable
 
 ### Instalar en el celular
 
-Pasa el `.apk` al teléfono (cable, WhatsApp, Drive…), ábrelo y permite
-"instalar apps de orígenes desconocidos". La app busca la API en tu PC (`:4000`),
-así que el backend debe estar corriendo y el teléfono en la misma WiFi.
+Descarga el APK desde la landing (`https://taher-82uh.onrender.com` → "Descargar para
+Android") o pasa el `.apk` al teléfono, ábrelo y permite "instalar apps de orígenes
+desconocidos". El APK de producción apunta a la API en Render, funciona solo.
+
+### Versión web (iPhone / PC)
+
+La misma app compilada a web se sirve en `https://taher-82uh.onrender.com/app`.
+Para regenerarla tras un cambio:
+
+```bash
+cd app
+EXPO_PUBLIC_API_URL=https://taher-82uh.onrender.com npx expo export --platform web --output-dir dist-web
+rm -rf ../backend/public/app && cp -r dist-web ../backend/public/app
+# commit + push → Render la sirve automáticamente
+```
+
+Para actualizar el APK descargable de la landing, copia el nuevo build a
+`backend/public/downloads/Taher.apk` y haz commit.
 
 ---
 

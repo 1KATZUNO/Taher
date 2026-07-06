@@ -4,30 +4,44 @@ import mongoose from "mongoose";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import path from "path";
+import { fileURLToPath } from "url";
 
 import authRoutes from "./routes/auth.js";
 import jovenesRoutes from "./routes/jovenes.js";
 import statsRoutes from "./routes/stats.js";
 import { obtenerConfig } from "./models/Config.js";
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const PUBLIC_DIR = path.join(__dirname, "..", "public");
+
 const app = express();
 const PORT = process.env.PORT || 4000;
 
 // Middlewares
-app.use(helmet());
+// CSP deshabilitado: servimos la landing y la app web (estilos/scripts inline)
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
-// Healthcheck
-app.get("/", (req, res) => {
+// Healthcheck (JSON)
+app.get("/api/health", (req, res) => {
   res.json({ ok: true, service: "Taher API", version: "1.0.0" });
 });
 
-// Rutas
+// Rutas de la API
 app.use("/api/auth", authRoutes);
 app.use("/api/jovenes", jovenesRoutes);
 app.use("/api/stats", statsRoutes);
+
+// Sitio estático: landing (/) , app web (/app) y descargas (/downloads)
+app.use(express.static(PUBLIC_DIR));
+
+// Fallback SPA: cualquier ruta bajo /app la resuelve el router de la app web
+app.get("/app/*", (req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, "app", "index.html"));
+});
 
 // 404
 app.use((req, res) => {
@@ -40,8 +54,13 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Error interno del servidor" });
 });
 
-// Conexión a MongoDB y arranque
+// Arranque: el servidor web sube primero (landing/app siempre disponibles)
+// y la conexión a MongoDB se establece en paralelo.
 async function start() {
+  app.listen(PORT, () => {
+    console.log(`🚀 Taher escuchando en http://localhost:${PORT}`);
+  });
+
   try {
     if (!process.env.MONGO_URI) {
       throw new Error("Falta la variable MONGO_URI en el archivo .env");
@@ -52,13 +71,8 @@ async function start() {
     // Asegura que el PIN universal exista en la BD (colección 'config')
     const config = await obtenerConfig();
     console.log(`🔑 PIN universal activo: ${config.pin}`);
-
-    app.listen(PORT, () => {
-      console.log(`🚀 API Taher escuchando en http://localhost:${PORT}`);
-    });
   } catch (err) {
-    console.error("❌ No se pudo iniciar el servidor:", err.message);
-    process.exit(1);
+    console.error("⚠️ Sin conexión a MongoDB (la API responderá errores):", err.message);
   }
 }
 

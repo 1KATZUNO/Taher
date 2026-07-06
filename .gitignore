@@ -1,5 +1,7 @@
 # Dependencias
 node_modules/
+# Excepción: los assets exportados de la web usan una ruta con "node_modules"
+!backend/public/app/assets/node_modules/
 
 # Variables de entorno (¡nunca subir credenciales!)
 .env
@@ -13,6 +15,7 @@ npm-debug.log*
 # Expo / React Native
 app/.expo/
 app/dist/
+app/dist-web/
 app/web-build/
 *.jks
 *.p8

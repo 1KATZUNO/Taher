@@ -7,17 +7,19 @@ import {
   ScrollView,
   Switch,
   ActivityIndicator,
-  Alert,
+
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { api } from "../lib/api";
+import { alerta } from "../lib/alerta";
 
 const EDADES = Array.from({ length: 30 }, (_, i) => i + 1); // 1..30
 
 export default function RegistroScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [form, setForm] = useState({
     nombreCompleto: "",
     direccion: "",
@@ -35,24 +37,24 @@ export default function RegistroScreen() {
 
   async function guardar() {
     if (!form.nombreCompleto.trim()) {
-      Alert.alert("Falta el nombre", "Ingresa el nombre completo del joven.");
+      alerta("Falta el nombre", "Ingresa el nombre completo del joven.");
       return;
     }
     setGuardando(true);
     try {
       await api.crearJoven(form);
-      Alert.alert("¡Registrado!", "El joven se guardó correctamente.", [
+      alerta("¡Registrado!", "El joven se guardó correctamente.", [
         { text: "OK", onPress: () => router.back() },
       ]);
     } catch (err) {
-      Alert.alert("Error al guardar", err.message);
+      alerta("Error al guardar", err.message);
     } finally {
       setGuardando(false);
     }
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-surface">
+    <SafeAreaView className="flex-1 bg-surface" edges={["top"]}>
       {/* Header */}
       <View className="h-16 px-4 flex-row items-center justify-between border-b border-outline-variant/20">
         <Text className="text-xl font-bold text-primary">Nuevo Registro</Text>
@@ -63,7 +65,7 @@ export default function RegistroScreen() {
 
       <ScrollView
         className="flex-1 px-5"
-        contentContainerStyle={{ paddingVertical: 20, paddingBottom: 120 }}
+        contentContainerStyle={{ paddingVertical: 20, paddingBottom: 140 + insets.bottom }}
         keyboardShouldPersistTaps="handled"
       >
         {/* Banner */}
@@ -204,8 +206,11 @@ export default function RegistroScreen() {
         </View>
       </ScrollView>
 
-      {/* Botón guardar */}
-      <View className="absolute bottom-0 left-0 right-0 bg-white p-4 border-t border-outline-variant/20">
+      {/* Botón guardar (respeta la barra del sistema) */}
+      <View
+        className="absolute bottom-0 left-0 right-0 bg-white p-4 border-t border-outline-variant/20"
+        style={{ paddingBottom: 16 + insets.bottom }}
+      >
         <Pressable
           onPress={guardar}
           disabled={guardando}

@@ -4,12 +4,13 @@ import {
   Text,
   Pressable,
   ActivityIndicator,
-  Alert,
+
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { api } from "../lib/api";
+import { alerta } from "../lib/alerta";
 
 const PIN_LENGTH = 4;
 
@@ -32,7 +33,7 @@ export default function PinScreen() {
         setEstado("idle");
       }, 700);
       if (err.status !== 401) {
-        Alert.alert(
+        alerta(
           "Sin conexión",
           "No se pudo contactar la API. Revisa que el backend esté corriendo y que el teléfono esté en la misma red.\n\n" +
             err.message

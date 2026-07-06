@@ -5,13 +5,14 @@ import {
   Pressable,
   ScrollView,
   ActivityIndicator,
-  Alert,
+
   Linking,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { api } from "../../lib/api";
+import { alerta } from "../../lib/alerta";
 
 export default function DetalleJoven() {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function DetalleJoven() {
   }, [id]);
 
   function eliminar() {
-    Alert.alert("Eliminar registro", "¿Seguro que deseas eliminarlo?", [
+    alerta("Eliminar registro", "¿Seguro que deseas eliminarlo?", [
       { text: "Cancelar", style: "cancel" },
       {
         text: "Eliminar",
@@ -33,7 +34,7 @@ export default function DetalleJoven() {
             await api.eliminarJoven(id);
             router.back();
           } catch (e) {
-            Alert.alert("Error", e.message);
+            alerta("Error", e.message);
           }
         },
       },

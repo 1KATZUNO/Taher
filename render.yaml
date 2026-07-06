@@ -10,7 +10,7 @@ services:
     rootDir: backend
     buildCommand: npm install
     startCommand: npm start
-    healthCheckPath: /
+    healthCheckPath: /api/health
     envVars:
       - key: MONGO_URI
         sync: false # se define manualmente en el dashboard (secreto)
