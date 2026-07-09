@@ -5,18 +5,22 @@ import Joven from "../models/Joven.js";
 const router = Router();
 
 /**
- * GET /api/jovenes?search=texto
+ * GET /api/jovenes?search=texto&edad=17&genero=masculino&salvo=true&reconciliacion=true
  * Lista los jóvenes registrados (más recientes primero).
- * Si viene ?search filtra por nombre o ciudad (case-insensitive).
+ * Todos los filtros son opcionales y combinables.
  */
 router.get("/", async (req, res, next) => {
   try {
-    const { search } = req.query;
+    const { search, edad, genero, salvo, reconciliacion } = req.query;
     const filtro = {};
     if (search && search.trim()) {
       const regex = new RegExp(search.trim(), "i");
       filtro.$or = [{ nombreCompleto: regex }, { ciudad: regex }];
     }
+    if (edad && !Number.isNaN(Number(edad))) filtro.edad = Number(edad);
+    if (genero === "masculino" || genero === "femenino") filtro.genero = genero;
+    if (salvo === "true") filtro.salvo = true;
+    if (reconciliacion === "true") filtro.reconciliacion = true;
     const jovenes = await Joven.find(filtro).sort({ createdAt: -1 });
     res.json(jovenes);
   } catch (err) {

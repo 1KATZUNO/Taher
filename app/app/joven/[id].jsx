@@ -18,10 +18,25 @@ export default function DetalleJoven() {
   const router = useRouter();
   const { id } = useLocalSearchParams();
   const [joven, setJoven] = useState(null);
+  const [guardando, setGuardando] = useState(false);
 
   useEffect(() => {
     api.obtenerJoven(id).then(setJoven).catch(() => {});
   }, [id]);
+
+  async function marcar(campo) {
+    if (!joven || guardando) return;
+    const nuevoValor = !joven[campo];
+    setGuardando(true);
+    try {
+      const actualizado = await api.actualizarJoven(id, { [campo]: nuevoValor });
+      setJoven(actualizado);
+    } catch (e) {
+      alerta("Error", e.message);
+    } finally {
+      setGuardando(false);
+    }
+  }
 
   function eliminar() {
     alerta("Eliminar registro", "¿Seguro que deseas eliminarlo?", [
@@ -74,6 +89,28 @@ export default function DetalleJoven() {
           </Text>
         </View>
 
+        {/* Decisión espiritual (se puede marcar/desmarcar aquí también) */}
+        <View className="flex-row gap-3 mb-4">
+          <BotonDecision
+            icon="favorite"
+            label="Salvo"
+            activo={!!joven.salvo}
+            colorActivo="#006c49"
+            fondoActivo="rgba(108,248,187,0.25)"
+            deshabilitado={guardando}
+            onPress={() => marcar("salvo")}
+          />
+          <BotonDecision
+            icon="volunteer-activism"
+            label="Reconciliación"
+            activo={!!joven.reconciliacion}
+            colorActivo="#825100"
+            fondoActivo="rgba(255,221,184,0.45)"
+            deshabilitado={guardando}
+            onPress={() => marcar("reconciliacion")}
+          />
+        </View>
+
         <Dato icon="location-on" label="Dirección" valor={joven.direccion || "—"} />
         <Dato icon="call" label="Teléfono" valor={joven.telefono || "—"} />
         <Dato
@@ -105,6 +142,27 @@ export default function DetalleJoven() {
         ) : null}
       </ScrollView>
     </SafeAreaView>
+  );
+}
+
+function BotonDecision({ icon, label, activo, colorActivo, fondoActivo, deshabilitado, onPress }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={deshabilitado}
+      className="flex-1 h-14 rounded-xl border flex-row items-center justify-center gap-2"
+      style={{
+        borderColor: activo ? colorActivo : "#c2c6d6",
+        backgroundColor: activo ? fondoActivo : "#ffffff",
+        opacity: deshabilitado ? 0.6 : 1,
+      }}
+    >
+      <MaterialIcons name={icon} size={20} color={activo ? colorActivo : "#727785"} />
+      <Text className="font-semibold" style={{ color: activo ? colorActivo : "#0b1c30" }}>
+        {label}
+      </Text>
+      {activo && <MaterialIcons name="check-circle" size={16} color={colorActivo} />}
+    </Pressable>
   );
 }
 

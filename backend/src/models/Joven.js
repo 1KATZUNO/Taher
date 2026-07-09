@@ -38,6 +38,14 @@ const jovenSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    salvo: {
+      type: Boolean,
+      default: false,
+    },
+    reconciliacion: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true, // crea createdAt y updatedAt

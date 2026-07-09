@@ -122,8 +122,101 @@ export default function EstadisticasScreen() {
             />
           </View>
         </View>
+
+        {/* Salvos */}
+        <View className="bg-surface-container-lowest rounded-xl p-5 mt-4 border border-outline-variant/30">
+          <View className="flex-row items-center justify-between mb-4">
+            <View className="flex-row items-center gap-2">
+              <MaterialIcons name="favorite" size={22} color="#006c49" />
+              <Text className="text-xl font-semibold text-on-surface">Salvos</Text>
+            </View>
+            <View className="bg-secondary-container px-3 py-1 rounded-full">
+              <Text className="text-on-secondary-container font-bold">
+                {stats.salvos?.total ?? 0} · {stats.salvos?.porcentaje ?? 0}%
+              </Text>
+            </View>
+          </View>
+
+          <View className="flex-row gap-3 mb-4">
+            <View className="flex-1 bg-surface-container-low rounded-xl p-3 items-center">
+              <MaterialIcons name="male" size={18} color="#2170e4" />
+              <Text className="text-lg font-bold text-on-surface">
+                {stats.salvos?.genero?.hombres ?? 0}
+              </Text>
+              <Text className="text-xs text-outline">Hombres</Text>
+            </View>
+            <View className="flex-1 bg-surface-container-low rounded-xl p-3 items-center">
+              <MaterialIcons name="female" size={18} color="#006c49" />
+              <Text className="text-lg font-bold text-on-surface">
+                {stats.salvos?.genero?.mujeres ?? 0}
+              </Text>
+              <Text className="text-xs text-outline">Mujeres</Text>
+            </View>
+            <View className="flex-1 bg-surface-container-low rounded-xl p-3 items-center">
+              <MaterialIcons name="volunteer-activism" size={18} color="#825100" />
+              <Text className="text-lg font-bold text-on-surface">
+                {stats.reconciliaciones ?? 0}
+              </Text>
+              <Text className="text-xs text-outline">Reconcil.</Text>
+            </View>
+          </View>
+
+          {(stats.salvos?.porEdad?.length ?? 0) > 0 ? (
+            <>
+              <Text className="font-semibold text-on-surface-variant text-sm mb-2">
+                Salvos por edad
+              </Text>
+              <TablaEdades filas={stats.salvos.porEdad} color="#006c49" />
+            </>
+          ) : (
+            <Text className="text-outline text-sm">Aún no hay salvos registrados.</Text>
+          )}
+        </View>
+
+        {/* Por edad exacta (todos) */}
+        <View className="bg-surface-container-lowest rounded-xl p-5 mt-4 border border-outline-variant/30">
+          <Text className="text-xl font-semibold text-on-surface mb-1">
+            Por edad exacta
+          </Text>
+          <Text className="text-outline text-sm mb-3">
+            Todos los registrados, con desglose por género
+          </Text>
+          <TablaEdades filas={stats.porEdad ?? []} color="#2170e4" />
+        </View>
       </ScrollView>
     </SafeAreaView>
+  );
+}
+
+/**
+ * Tabla compacta de edades: cada fila muestra la edad, una barra proporcional
+ * y el total con desglose hombres/mujeres.
+ */
+function TablaEdades({ filas, color }) {
+  if (!filas.length) {
+    return <Text className="text-outline text-sm">Sin datos todavía.</Text>;
+  }
+  const max = Math.max(...filas.map((f) => f.total), 1);
+  return (
+    <View>
+      {filas.map((f) => (
+        <View key={f.edad} className="flex-row items-center mb-2">
+          <Text className="w-14 text-on-surface font-semibold text-sm">
+            {f.edad} años
+          </Text>
+          <View className="flex-1 bg-outline-variant/20 h-4 rounded-full overflow-hidden mx-2">
+            <View
+              className="h-full rounded-full"
+              style={{ width: `${(f.total / max) * 100}%`, backgroundColor: color }}
+            />
+          </View>
+          <Text className="w-24 text-right text-sm text-on-surface">
+            <Text className="font-bold">{f.total}</Text>
+            <Text className="text-outline"> ({f.hombres}H·{f.mujeres}M)</Text>
+          </Text>
+        </View>
+      ))}
+    </View>
   );
 }
 

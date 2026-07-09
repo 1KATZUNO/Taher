@@ -43,9 +43,14 @@ export default function JovenCard({ joven, onPress }) {
           </Text>
         </View>
         <View className="flex-1">
-          <Text className="font-semibold text-on-surface" numberOfLines={1}>
-            {joven.nombreCompleto}
-          </Text>
+          <View className="flex-row items-center gap-1">
+            <Text className="font-semibold text-on-surface" numberOfLines={1}>
+              {joven.nombreCompleto}
+            </Text>
+            {joven.salvo && (
+              <MaterialIcons name="favorite" size={14} color="#006c49" />
+            )}
+          </View>
           <Text className="text-outline text-xs">{subtitulo}</Text>
         </View>
       </View>

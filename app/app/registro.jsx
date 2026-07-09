@@ -28,6 +28,8 @@ export default function RegistroScreen() {
     telefono: "",
     genero: "masculino",
     whatsappConsent: true,
+    salvo: false,
+    reconciliacion: false,
   });
   const [guardando, setGuardando] = useState(false);
 
@@ -182,6 +184,28 @@ export default function RegistroScreen() {
           </View>
         </Campo>
 
+        {/* Decisión espiritual */}
+        <Campo label="Decisión">
+          <View className="flex-row gap-4">
+            <ToggleDecision
+              icon="favorite"
+              label="Salvo"
+              activo={form.salvo}
+              colorActivo="#006c49"
+              fondoActivo="rgba(108,248,187,0.25)"
+              onPress={() => set("salvo", !form.salvo)}
+            />
+            <ToggleDecision
+              icon="volunteer-activism"
+              label="Reconciliación"
+              activo={form.reconciliacion}
+              colorActivo="#825100"
+              fondoActivo="rgba(255,221,184,0.45)"
+              onPress={() => set("reconciliacion", !form.reconciliacion)}
+            />
+          </View>
+        </Campo>
+
         {/* WhatsApp */}
         <View className="p-4 bg-surface-container rounded-2xl flex-row items-center justify-between border border-primary-container/20 mt-2">
           <View className="flex-row items-center gap-3 flex-1">
@@ -240,6 +264,30 @@ function Campo({ label, children }) {
       </Text>
       {children}
     </View>
+  );
+}
+
+function ToggleDecision({ icon, label, activo, colorActivo, fondoActivo, onPress }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      className="flex-1 h-14 rounded-xl border flex-row items-center justify-center gap-2"
+      style={{
+        borderColor: activo ? colorActivo : "#c2c6d6",
+        backgroundColor: activo ? fondoActivo : "#ffffff",
+      }}
+    >
+      <MaterialIcons name={icon} size={20} color={activo ? colorActivo : "#727785"} />
+      <Text
+        className="font-semibold"
+        style={{ color: activo ? colorActivo : "#0b1c30" }}
+      >
+        {label}
+      </Text>
+      {activo && (
+        <MaterialIcons name="check-circle" size={16} color={colorActivo} />
+      )}
+    </Pressable>
   );
 }
 

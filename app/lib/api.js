@@ -75,6 +75,12 @@ export const api = {
       body: JSON.stringify(joven),
     }),
 
+  actualizarJoven: (id, cambios) =>
+    request(`/api/jovenes/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(cambios),
+    }),
+
   eliminarJoven: (id) =>
     request(`/api/jovenes/${id}`, { method: "DELETE" }),
 
