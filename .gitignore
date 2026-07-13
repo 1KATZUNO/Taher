@@ -16,6 +16,7 @@ npm-debug.log*
 app/.expo/
 app/dist/
 app/dist-web/
+app/dist-pages/
 app/web-build/
 *.jks
 *.p8
