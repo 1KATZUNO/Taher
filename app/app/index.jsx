@@ -1,58 +1,47 @@
-import { useState } from "react";
-import {
-  View,
-  Text,
-  Pressable,
-  ActivityIndicator,
-
-} from "react-native";
+import { useState, useEffect } from "react";
+import { View, Text, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { api } from "../lib/api";
-import { alerta } from "../lib/alerta";
+import { API_URL } from "../lib/api";
 
 const PIN_LENGTH = 4;
+// PIN universal quemado en la app: la validación es local e instantánea.
+// (Seguridad superficial a propósito; el dato sensible vive en la API.)
+const PIN_CORRECTO = "2207";
 
 export default function PinScreen() {
   const router = useRouter();
   const [pin, setPin] = useState("");
-  const [estado, setEstado] = useState("idle"); // idle | loading | error
-  const [loading, setLoading] = useState(false);
+  const [estado, setEstado] = useState("idle"); // idle | error
 
-  async function validar(valor) {
-    setLoading(true);
-    setEstado("loading");
-    try {
-      await api.validarPin(valor);
+  // Despierta la API de Render (plan free se duerme) mientras el usuario
+  // teclea el PIN, para que al entrar los datos carguen rápido.
+  useEffect(() => {
+    fetch(`${API_URL}/api/health`).catch(() => {});
+  }, []);
+
+  function validar(valor) {
+    if (valor === PIN_CORRECTO) {
       router.replace("/(tabs)/inicio");
-    } catch (err) {
-      setEstado("error");
-      setTimeout(() => {
-        setPin("");
-        setEstado("idle");
-      }, 700);
-      if (err.status !== 401) {
-        alerta(
-          "Sin conexión",
-          "No se pudo contactar la API. Revisa que el backend esté corriendo y que el teléfono esté en la misma red.\n\n" +
-            err.message
-        );
-      }
-    } finally {
-      setLoading(false);
+      setTimeout(() => setPin(""), 500);
+      return;
     }
+    setEstado("error");
+    setTimeout(() => {
+      setPin("");
+      setEstado("idle");
+    }, 700);
   }
 
   function presionar(num) {
-    if (loading || pin.length >= PIN_LENGTH) return;
+    if (pin.length >= PIN_LENGTH) return;
     const nuevo = pin + num;
     setPin(nuevo);
     if (nuevo.length === PIN_LENGTH) validar(nuevo);
   }
 
   function borrar() {
-    if (loading) return;
     setPin((p) => p.slice(0, -1));
   }
 
@@ -119,13 +108,9 @@ export default function PinScreen() {
 
         {/* Footer */}
         <View className="items-center w-full">
-          {loading ? (
-            <ActivityIndicator color="#0058be" />
-          ) : (
-            <Text className="text-primary font-semibold text-sm">
-              ¿Olvidaste tu PIN?
-            </Text>
-          )}
+          <Text className="text-primary font-semibold text-sm">
+            ¿Olvidaste tu PIN?
+          </Text>
         </View>
       </View>
     </SafeAreaView>

@@ -16,6 +16,7 @@ import { api } from "../lib/api";
 import { alerta } from "../lib/alerta";
 
 const EDADES = Array.from({ length: 30 }, (_, i) => i + 1); // 1..30
+const LUGARES = ["Tulitas", "Cacao", "Sagamad", "Malinche", "Otro"];
 
 export default function RegistroScreen() {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function RegistroScreen() {
   const [form, setForm] = useState({
     nombreCompleto: "",
     direccion: "",
-    ciudad: "",
+    ciudad: "Otro",
     edad: 18,
     telefono: "",
     genero: "masculino",
@@ -105,14 +106,31 @@ export default function RegistroScreen() {
           </View>
         </Campo>
 
-        <Campo label="Ciudad">
-          <TextInput
-            className="h-12 px-4 rounded-xl border border-outline-variant bg-white text-on-surface"
-            placeholder="Ej. Medellín"
-            placeholderTextColor="#727785"
-            value={form.ciudad}
-            onChangeText={(v) => set("ciudad", v)}
-          />
+        <Campo label="Lugar de residencia">
+          <View className="flex-row flex-wrap gap-2">
+            {LUGARES.map((lugar) => {
+              const activo = form.ciudad === lugar;
+              return (
+                <Pressable
+                  key={lugar}
+                  onPress={() => set("ciudad", lugar)}
+                  className={`px-4 h-10 rounded-full items-center justify-center border ${
+                    activo
+                      ? "bg-primary border-primary"
+                      : "bg-white border-outline-variant"
+                  }`}
+                >
+                  <Text
+                    className={`font-semibold text-sm ${
+                      activo ? "text-white" : "text-on-surface-variant"
+                    }`}
+                  >
+                    {lugar}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
         </Campo>
 
         {/* Edad */}

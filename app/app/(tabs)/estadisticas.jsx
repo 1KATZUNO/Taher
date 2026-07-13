@@ -1,10 +1,17 @@
 import { useState, useCallback } from "react";
-import { View, Text, ScrollView, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+  Pressable,
+  Linking,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "expo-router";
 import TopBar from "../../components/TopBar";
-import { api } from "../../lib/api";
+import { api, API_URL } from "../../lib/api";
 
 export default function EstadisticasScreen() {
   const [stats, setStats] = useState(null);
@@ -33,6 +40,15 @@ export default function EstadisticasScreen() {
         className="flex-1 px-5"
         contentContainerStyle={{ paddingTop: 16, paddingBottom: 32 }}
       >
+        {/* Exportar a Excel */}
+        <Pressable
+          onPress={() => Linking.openURL(`${API_URL}/api/export/excel`)}
+          className="h-12 bg-secondary rounded-xl flex-row items-center justify-center gap-2 mb-4 active:scale-95"
+        >
+          <MaterialIcons name="table-view" size={20} color="#ffffff" />
+          <Text className="text-white font-bold">Exportar a Excel</Text>
+        </Pressable>
+
         {/* Total */}
         <View className="bg-primary-container rounded-xl p-6 overflow-hidden">
           <Text className="text-on-primary-container/80 text-sm font-semibold">
