@@ -10,6 +10,7 @@ import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
 import jovenesRoutes from "./routes/jovenes.js";
 import statsRoutes from "./routes/stats.js";
+import exportarRoutes from "./routes/exportar.js";
 import { obtenerConfig } from "./models/Config.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -34,6 +35,7 @@ app.get("/api/health", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/jovenes", jovenesRoutes);
 app.use("/api/stats", statsRoutes);
+app.use("/api/export", exportarRoutes);
 
 // Sitio estático: landing (/) , app web (/app) y descargas (/downloads)
 app.use(express.static(PUBLIC_DIR));
